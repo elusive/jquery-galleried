@@ -7,13 +7,13 @@
 <body>
 	<div id="qunit"></div>
 	<script type="text/javascript" src="resources/qunit/qunit-1.10.0.js"></script>
-	<script type="text/javascript" src="lambdas.js"></script>
+	<script type="text/javascript" src="scripts/lambdas.js"></script>
 
 	<!--  INLINE TESTS  -->
 	<script type="text/javascript">
 
 		/*
-		 *	Test Setup
+		 *	Test Setups
 		 */
 		var TestInputValues = {
 			LambdaNoParen : "x,y => return x + y",
@@ -27,16 +27,33 @@
 			FunctionString : "function(x,y) { return x + y; }"
 		};
 
-		test("Correctly parse arguments string",
+		/** Test number 1 */
+		test("Scope Test", 
+			function () {
+                ok(true, "Always passing.");
+			});
+
+
+		/** Test number 2 */
+		test("Undefined issue test.",
+			function () {
+				equal(4, 4,"Testing source of undefined error in other tests.");
+			});
+
+
+		/** Test number 1 */
+		test("Correctly parse argument string.",
 			function() {
 				var result = parseArgumentsString(TestInputValues.LambdaNoParen);
-				ok(result == ExpectedResultValues.ArgumentString,
-					"Support function that parses argument string returns expected value.");
-			})
+				equal("Parse correct argument string.",
+					result, ExpectedResultValues.ArgumentString)
+			});
 
 		test("Correctly parse the expression string.",
 			function() {
-                return false;
+                var result = parseExpressionString(TestInputValues.LambdaNoParen);
+                equal("Parse results are correct.", 
+                	result, ExpectedResultValues.ExpressionString);
 			});
 
 	</script>
