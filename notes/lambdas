@@ -1,0 +1,43 @@
+Lambda Syntax for Callback Functions in Javascript
+
+	Want to be able to use an abbreviated syntax for passing anonymous
+functions as parameters, as in when specifying a callback function.  One
+example of this is passing an anonymous function to the click() method of
+a jquery object.
+
+	The simplest, and perhaps only way to do this w/o adding a layer
+of parsing or precompiling to the stack (as in CoffeeScript), is to use
+a helper function.  One that is a helpful but tersely named function, or
+perhaps an extension to the instrinsic Function object's prototype. Then
+this helper can accept a lambda expression defining the callback function.
+As in: fx("x => return x").  This expression argument can be parsed and
+used to construct an instance of the Function object, which is then sent
+back to the caller as the return value.
+
+	The bulk of this effort will be successfully and consistently 
+parsing the passed "lambda" expression so that is can be accurately put
+into the returned Function instance.
+
+Step 1:  Collect the lambda parameters.
+	The use of regular expressions should make this task easier and
+	more consistent.  We need the values to the left of the lambda
+	operator (" => ").  
+
+	So for the expression: "(x,y) => return x + y;" we need back the
+	values "x" and "y" only.  these parameters will need to be the
+	arguments for the returned Function instance we will construct
+	in the helper method.
+
+	Some of the rules for this parse are:
+		a. could be in parenthesis, or not
+		b. could be multiple values, if so comma separated
+		c. could be single char value, or multiple
+		   such as: x, y or obj, or x, val
+		d. must be to the left of the lambda operator
+		e. () will indicate a parameter-less function
+	NOTE: one way of improving this feature will be to seriously
+	    work on the validation and parsing of correct lambda 
+	    syntax.  There are lots of options, such as with and w/o
+	    parenthesis, etc.  Validating the expression before we
+	    start to parse and process is an extensive operation due
+	    to all of the possible and acceptable variations.

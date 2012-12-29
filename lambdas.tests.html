@@ -1,0 +1,44 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>QUnit Test Harness</title>
+	<link rel="stylesheet" href="resources/qunit/qunit-1.10.0.css" />
+</head>
+<body>
+	<div id="qunit"></div>
+	<script type="text/javascript" src="resources/qunit/qunit-1.10.0.js"></script>
+	<script type="text/javascript" src="lambdas.js"></script>
+
+	<!--  INLINE TESTS  -->
+	<script type="text/javascript">
+
+		/*
+		 *	Test Setup
+		 */
+		var TestInputValues = {
+			LambdaNoParen : "x,y => return x + y",
+			LambdaWithParen : "(x,y) => return x + y",
+			LambdaWithoutSemicolon : "(x,y) => return x + y;"
+		};
+
+		var ExpectedResultValues = {
+			ArgumentString : "(x,y)",
+			ExpressionString : "return x + y;",
+			FunctionString : "function(x,y) { return x + y; }"
+		};
+
+		test("Correctly parse arguments string",
+			function() {
+				var result = parseArgumentsString(TestInputValues.LambdaNoParen);
+				ok(result == ExpectedResultValues.ArgumentString,
+					"Support function that parses argument string returns expected value.");
+			})
+
+		test("Correctly parse the expression string.",
+			function() {
+                return false;
+			});
+
+	</script>
+</body>
+</html>

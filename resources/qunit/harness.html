@@ -1,0 +1,21 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Sample QUnit Test Harness</title>
+	<link rel="stylesheet" href="./qunit-1.10.0.css" />
+</head>
+<body>
+	<div id="qunit"></div>
+	<script type="text/javascript" src="./qunit-1.10.0.js"></script>
+	<script type="text/javascript" src="./tests.js"></script>
+
+	<!--  INLINE TESTS  -->
+	<script type="text/javascript">
+
+		test("hello test", function() {
+			ok( 1 == "1", "Passed 1!");
+		})
+
+	</script>
+</body>
+</html>

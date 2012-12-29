@@ -16,7 +16,7 @@
      * Credits: The code for the stylesheet creation
      * was found in a forum post on http://nabble.com
      * originally posted by Danny Wachsstock.
-     * Thank you Danny.
+     * Thank you Danny, very much.
      */
     $.extend($, {
         style   :   function(selector, options) {
