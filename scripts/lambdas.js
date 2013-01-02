@@ -42,19 +42,6 @@ var Constants = {
         EXPRESSION_SUFFIX : ";"
     };
 
-var parseString = function(expression) {
-    // check parameter
-    if (expression.constructor.name != 'String') {
-        //
-        // This statement causes an "Undefined" error in Chrome.  More research is
-        // needed before I can add in the custom exceptions.
-        // throw new Error('Invalid argument type.  Expected [String] but received '
-        //     + expression.constructor.name + '.');
-        return false;
-    }
-
-}
-
 
 /**
  *     Parse the arguments string from the expression provided.
