@@ -22,12 +22,13 @@
  *
  */
 
-// define class/namespace
-var Lambda = {};
 
-
-(function() {
+/** Constant Values */
 var Constants = {
+
+        // general values
+        LAMBDA_OPERATOR : "=>",
+
         // regular expression patterns
         PATTERNS_ARGUMENTS : ".*?[^\s](?=\s?\=>\s?)",
         PATTERNS_EXPRESSION : "(?!.*?\s?\=>\s?)[^>\s].*",
@@ -35,37 +36,23 @@ var Constants = {
         // function pieces
         FUNCTION_DECLARATION1 : "function",
         FUNCTION_DECLARATION2 : " { ",
-        FUNCTION_DECLARATION3 : " }"
+        FUNCTION_DECLARATION3 : " }",
+
+        // expression pieces
+        EXPRESSION_SUFFIX : ";"
     };
 
-
-fx = function(expr) {
-    
-    var argString = parseArgumentsString(expr);
-    
-    re2 = new RegExp(Constants.PATTERNS_EXPRESSION);
-    matches2 = re2.exec(expr);
-    
-    var expression = matches2[0].trim();
-        
-    // check for semi-colon at end of expression.
-    if (expression.trim().indexOf(';') < expression.length-1) {
-        expression = expression.concat(';');
+var parseString = function(expression) {
+    // check parameter
+    if (expression.constructor.name != 'String') {
+        //
+        // This statement causes an "Undefined" error in Chrome.  More research is
+        // needed before I can add in the custom exceptions.
+        // throw new Error('Invalid argument type.  Expected [String] but received '
+        //     + expression.constructor.name + '.');
+        return false;
     }
-    
-    // alert(expression);
-    
-    var funcString = Constants.FUNCTION_DECLARATION1
-        .concat(arguments)
-        .concat(Constants.FUNCTION_DECLARATION2)
-        .concat(expression)
-        .concat(Constants.FUNCTION_DECLARATION3);
-        
-    // alert(funcString);
-      
-    eval('var x = ' + funcString);
-    
-    return x;
+
 }
 
 
@@ -73,20 +60,25 @@ fx = function(expr) {
  *     Parse the arguments string from the expression provided.
  *     @param {string} [expression] lambda expression string
  */
-parseArgumentsString = function(expression) {
+var parseArgumentString = function(expression) {
 
     // check parameter
-	if (expression.constructor != 'String') 
-	{
-		throw ("Invalid argument type. Expected [String] but received " 
-			+ expression.constructor.name + ".");
-	}
+    if (expression.constructor.name != 'String') 
+    {
+        //
+        // This statement causes an "Undefined" error in Chrome.  More research is
+        // needed before I can add in the custom exceptions.
+        // throw ("Invalid argument type. Expected [String] but received " 
+        //    + expression.constructor.name + ".");
+        //
+        return false;
+    }
 
-	// string return value
-	var args = '';
+    // string return value
+    var args = '';
 
-	// use regexp pattern to pull out arguments section
-	var re = new RegExp(Constants.PATTERNS_ARGUMENTS);
+    // use regexp pattern to pull out arguments section
+    var re = new RegExp(Constants.PATTERNS_ARGUMENTS);
     var matches = re.exec(expression);    
     args = matches[0].trim();
 
@@ -109,6 +101,7 @@ parseArgumentsString = function(expression) {
     return args;
 }
 
+
 /**
  *    Parse expression string from the lambda provided, 
  *    Everything to the right of the lambda operator (=>).
@@ -117,10 +110,15 @@ parseArgumentsString = function(expression) {
 parseExpressionString = function(expression) {
 
 	// check parameter
-	if (expression.constructor != 'String') 
+	if (expression.constructor.name != 'String') 
 	{
-		throw ("Invalid argument type. Expected [String] but received " 
-			+ expression.constructor.name + ".");
+		//
+        // This statement causes an "Undefined" error in Chrome.  More research is
+        // needed before I can add in the custom exceptions.
+        // throw ("Invalid argument type. Expected [String] but received " 
+		//	+ expression.constructor.name + ".");
+        //
+        return false;
 	}
 
 	// return value
@@ -128,9 +126,50 @@ parseExpressionString = function(expression) {
 
 	// use regular expression to pull out expression section
 	var re = new RegExp(Constants.PATTERNS_EXPRESSION);
-    var matches2 = re2.exec(expression);
+    var matches = re.exec(expression);
+    expr = matches[0].trim();
 
-    expr = matches2[0];
+    // we need to search for the expression suffix and make
+    // sure that there is one at the end of the value.
+    if (expr.indexOf(Constants.EXPRESSION_SUFFIX) < 0) {
+        expr = expr.concat(Constants.EXPRESSION_SUFFIX);
+    }
+    
     return expr;
+}
 
-}})();
+/**
+ *    Main public function used to convert a lambda expression
+ *    into an anonymous function.
+ *    @param {string} [expression]
+ */
+var fx = function(lambda) {
+
+    // check parameter type and for lambda operator
+    if (lambda.constructor.name != 'String'  
+        && lambda.indexOf(Constants.LAMBDA_OPERATOR) < 0) 
+    {
+        //
+        // This statement causes an "Undefined" error in Chrome.  More research is
+        // needed before I can add in the custom exceptions.
+        // throw ("Invalid argument type. Expected [String] but received " 
+        //  + expression.constructor.name + ".");
+        //
+        return false;
+    }
+
+    var arguments = parseArgumentString(lambda);
+    
+    var expression = parseExpressionString(lambda)
+        
+    var functionString = Constants.FUNCTION_DECLARATION1
+        .concat(arguments)
+        .concat(Constants.FUNCTION_DECLARATION2)
+        .concat(expression)
+        .concat(Constants.FUNCTION_DECLARATION3);
+              
+    // build function object from resulting string
+    eval('var x = ' + functionString);
+    
+    return x;
+}
