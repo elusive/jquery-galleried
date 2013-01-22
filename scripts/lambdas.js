@@ -22,141 +22,158 @@
  *
  */
 
+//"use strict";
 
-/** Constant Values */
-var Constants = {
+var Lambdas = {
+    Version     :   '0.9.1',
+    Author      :   'John Gilliland <johngilliland@outlook>',
+    Url         :   'https://github.com/elusive/jquery-galleried'
+};
 
-        // general values
-        LAMBDA_OPERATOR : "=>",
+window.Lambdas = Lambdas;
 
-        // regular expression patterns
-        PATTERNS_ARGUMENTS : ".*?[^\s](?=\s?\=>\s?)",
-        PATTERNS_EXPRESSION : "(?!.*?\s?\=>\s?)[^>\s].*",
+(function(window) 
+{
+    var 
+        /**
+         *     Parse the arguments string from the expression provided.
+         *     @param {string} [expression] lambda expression string
+         */
+        parseArgumentsString = function(expression) {
+            // check parameter
+            if (expression.constructor.name != 'String') 
+            {
+                //
+                // This statement causes an "Undefined" error in Chrome.  More research is
+                // needed before I can add in the custom exceptions.
+                // throw ("Invalid argument type. Expected [String] but received " 
+                //    + expression.constructor.name + ".");
+                //
+                return false;
+            }
 
-        // function pieces
-        FUNCTION_DECLARATION1 : "function",
-        FUNCTION_DECLARATION2 : " { ",
-        FUNCTION_DECLARATION3 : " }",
+            // string return value
+            var args = '';
 
-        // expression pieces
-        EXPRESSION_SUFFIX : ";"
-    };
+            // use regexp pattern to pull out arguments section
+            var re = new RegExp(Constants.PATTERNS_ARGUMENTS);
+            var matches = re.exec(expression);    
+            args = matches[0].trim();
 
+            // In order to be consistent we will remove any 
+            // existing parenthesis in the arguments string
+            // and then re-add them, to make sure they are in
+            // the correct position.
+            if (args.indexOf('(') > -1) {
+                args = args.replace('(', '');
+            }
+            
+            // check if close paren already in args
+            if (args.indexOf(')') > -1) {
+                args = args.replace(')', '');
+            }
 
-/**
- *     Parse the arguments string from the expression provided.
- *     @param {string} [expression] lambda expression string
- */
-var parseArgumentString = function(expression) {
+            // re-add the parenthesis to arguments
+            args = '('.concat(args).concat(')');
 
-    // check parameter
-    if (expression.constructor.name != 'String') 
-    {
-        //
-        // This statement causes an "Undefined" error in Chrome.  More research is
-        // needed before I can add in the custom exceptions.
-        // throw ("Invalid argument type. Expected [String] but received " 
-        //    + expression.constructor.name + ".");
-        //
-        return false;
-    }
+            return args;
+        },
 
-    // string return value
-    var args = '';
+        /**
+         *    Parse expression string from the lambda provided, 
+         *    Everything to the right of the lambda operator (=>).
+         *    @param {string} [expression]
+         */
+        parseExpressionString = function(expression) {
+            // check parameter
+            if (expression.constructor.name != 'String') 
+            {
+                //
+                // This statement causes an "Undefined" error in Chrome.  More research is
+                // needed before I can add in the custom exceptions.
+                // throw ("Invalid argument type. Expected [String] but received " 
+                //  + expression.constructor.name + ".");
+                //
+                return false;
+            }
 
-    // use regexp pattern to pull out arguments section
-    var re = new RegExp(Constants.PATTERNS_ARGUMENTS);
-    var matches = re.exec(expression);    
-    args = matches[0].trim();
+            // return value
+            var expr = '';
 
-    // In order to be consistent we will remove any 
-    // existing parenthesis in the arguments string
-    // and then re-add them, to make sure they are in
-    // the correct position.
-    if (args.indexOf('(') > -1) {
-        args = args.replace('(', '');
-    }
-    
-    // check if close paren already in args
-    if (args.indexOf(')') > -1) {
-        args = args.replace(')', '');
-    }
+            // use regular expression to pull out expression section
+            var re = new RegExp(Constants.PATTERNS_EXPRESSION);
+            var matches = re.exec(expression);
+            expr = matches[0].trim();
 
-    // re-add the parenthesis to arguments
-    args = '('.concat(args).concat(')');
+            // we need to search for the expression suffix and make
+            // sure that there is one at the end of the value.
+            if (expr.indexOf(Constants.EXPRESSION_SUFFIX) < 0) {
+                expr = expr.concat(Constants.EXPRESSION_SUFFIX);
+            }
+            
+            return expr;
+        },
 
-    return args;
-}
+        /** 
+         *  Constant Values
+         */
+        Constants = {
+            // general values
+            LAMBDA_OPERATOR : "=>",
 
+            // regular expression patterns
+            PATTERNS_ARGUMENTS : ".*?[^\s](?=\s?\=>\s?)",
+            PATTERNS_EXPRESSION : "(?!.*?\s?\=>\s?)[^>\s].*",
 
-/**
- *    Parse expression string from the lambda provided, 
- *    Everything to the right of the lambda operator (=>).
- *    @param {string} [expression]
- */
-parseExpressionString = function(expression) {
+            // function pieces
+            FUNCTION_DECLARATION1 : "function",
+            FUNCTION_DECLARATION2 : " { ",
+            FUNCTION_DECLARATION3 : " }",
 
-	// check parameter
-	if (expression.constructor.name != 'String') 
-	{
-		//
-        // This statement causes an "Undefined" error in Chrome.  More research is
-        // needed before I can add in the custom exceptions.
-        // throw ("Invalid argument type. Expected [String] but received " 
-		//	+ expression.constructor.name + ".");
-        //
-        return false;
-	}
+            // expression pieces
+            EXPRESSION_SUFFIX : ";"
+        },
 
-	// return value
-	var expr = '';
+        /**
+         *    Main public function used to convert a lambda expression
+         *    into an anonymous function.
+         *    @param {string} [expression]
+         */
+        fx = function(lambda) {
+            // check parameter type and for lambda operator
+            if (lambda.constructor.name != 'String'  
+                && lambda.indexOf(Constants.LAMBDA_OPERATOR) < 0) 
+            {
+                //
+                // This statement causes an "Undefined" error in Chrome.  More research is
+                // needed before I can add in the custom exceptions.
+                // throw ("Invalid argument type. Expected [String] but received " 
+                //  + expression.constructor.name + ".");
+                //
+                return false;
+            }
 
-	// use regular expression to pull out expression section
-	var re = new RegExp(Constants.PATTERNS_EXPRESSION);
-    var matches = re.exec(expression);
-    expr = matches[0].trim();
+            var arguments = parseArgumentsString(lambda);
+            
+            var expression = parseExpressionString(lambda)
+                
+            var functionString = Constants.FUNCTION_DECLARATION1
+                .concat(arguments)
+                .concat(Constants.FUNCTION_DECLARATION2)
+                .concat(expression)
+                .concat(Constants.FUNCTION_DECLARATION3);
+                      
+            // build function object from resulting string
+            eval('var x = ' + functionString);
+            
+            return x;
+        }
 
-    // we need to search for the expression suffix and make
-    // sure that there is one at the end of the value.
-    if (expr.indexOf(Constants.EXPRESSION_SUFFIX) < 0) {
-        expr = expr.concat(Constants.EXPRESSION_SUFFIX);
-    }
-    
-    return expr;
-}
+        // assignments
+        Lambdas.ParseArguments = parseArgumentsString;
+        Lambdas.ParseExpression = parseExpressionString;
+        Lambdas.fx = Lambdas._l = fx;
+        return window._l = fx;
 
-/**
- *    Main public function used to convert a lambda expression
- *    into an anonymous function.
- *    @param {string} [expression]
- */
-var fx = function(lambda) {
+})(window);
 
-    // check parameter type and for lambda operator
-    if (lambda.constructor.name != 'String'  
-        && lambda.indexOf(Constants.LAMBDA_OPERATOR) < 0) 
-    {
-        //
-        // This statement causes an "Undefined" error in Chrome.  More research is
-        // needed before I can add in the custom exceptions.
-        // throw ("Invalid argument type. Expected [String] but received " 
-        //  + expression.constructor.name + ".");
-        //
-        return false;
-    }
-
-    var arguments = parseArgumentString(lambda);
-    
-    var expression = parseExpressionString(lambda)
-        
-    var functionString = Constants.FUNCTION_DECLARATION1
-        .concat(arguments)
-        .concat(Constants.FUNCTION_DECLARATION2)
-        .concat(expression)
-        .concat(Constants.FUNCTION_DECLARATION3);
-              
-    // build function object from resulting string
-    eval('var x = ' + functionString);
-    
-    return x;
-}
