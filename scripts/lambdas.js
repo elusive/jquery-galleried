@@ -20,12 +20,15 @@
  *		becomes:
  *			$("addButton").click(fx(x,y => return x + y));
  *
+ *  HISTORY"
+ *      0.9.2  Changed to use the Function([params], body) constructor to build the 
+ *              function from parsed lambda, instead of using string concatenation.
  */
 
 //"use strict";
 
 var Lambdas = {
-    Version     :   '0.9.1',
+    Version     :   '0.9.2',
     Author      :   'John Gilliland <johngilliland@outlook>',
     Url         :   'https://github.com/elusive/jquery-galleried'
 };
@@ -72,9 +75,6 @@ window.Lambdas = Lambdas;
             if (args.indexOf(')') > -1) {
                 args = args.replace(')', '');
             }
-
-            // re-add the parenthesis to arguments
-            //args = '('.concat(args).concat(')');
 
             return args;
         },
@@ -124,12 +124,7 @@ window.Lambdas = Lambdas;
             // regular expression patterns
             PATTERNS_ARGUMENTS : ".*?[^\s](?=\s?\=>\s?)",
             PATTERNS_EXPRESSION : "(?!.*?\s?\=>\s?)[^>\s].*",
-
-            // function pieces
-            FUNCTION_DECLARATION1 : "function",
-            FUNCTION_DECLARATION2 : " { ",
-            FUNCTION_DECLARATION3 : " }",
-
+            
             // expression pieces
             EXPRESSION_SUFFIX : ";"
         },
