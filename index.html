@@ -45,9 +45,14 @@
       .marketing p + h4 {
         margin-top: 28px;
       }
+        
+      .btn-margin {
+            margin-right: 10px;
+            margin-bottom: 30px;
+        }
     </style>
     <link href="resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">    
-    <link href="styles/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="styles/bootstrap.ex.css" rel="stylesheet" media="screen">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -61,9 +66,9 @@
 
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
+          <li class="active"><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
         <h3 class="muted">Javascript Expirements</h3>
       </div>
@@ -87,9 +92,9 @@
             that one needs to define and pass an anonymous function for, say, an event handler for a click event.  Working at least 40 hours a 
             week with C# I am accustomed to being able to pass an anonymous function as a simple lambda expression.  I figured it would be nice
             to be able to do this in javascript.</p>
-          <a class="btn btn-large btn-large-Ex" href="scripts/lambdas.js">Code</a>
-          <a class="btn btn-large btn-large-Ex" href="lambdas.html">Usage</a>
-          <a class="btn btn-large btn-large-Ex" href="tests/lambdas.tests.html">Unit Tests</a>
+          <a class="btn btn-large btn-margin" href="scripts/lambdas.js">Code</a>
+          <a class="btn btn-large btn-margin" href="usage/lambdas.html">Usage</a>
+          <a class="btn btn-large btn-margin" href="tests/lambdas.tests.html">Unit Tests</a>
           <p></p>
 
           <h4>Extension Methods</h4>
@@ -97,9 +102,10 @@
             Currently there is only the ever useful - string.format</p>
           <p>This is an extension method that I write/include in all of my C# projects at work.  It is just too convenient, and without the 
           exention method it is quite inconvenient.  Being able to access this functionality in a fluent way is very helpful.</p>
-          <a class="btn btn-large" style="float: left;margin-right: 10px;" href="lambdas.tests.html">Code</a>   
-          <a class="btn btn-large" style="float: left;margin-right: 10px;" href="lambdas.tests.html">Usage</a>
-          <a class="btn btn-large" style="float: left;margin-right: 10px;" href="lambdas.tests.html">Tests</a>
+          <a class="btn btn-large btn-margin" href="scripts/extensions.js">Code</a>   
+          <a class="btn btn-large btn-margin" href="extensions.tests.html">Usage</a>
+          <a class="btn btn-large btn-margin" href="usage/extensions.html">Tests</a>
+          <p></p>
 
           <h4>Coming Soon...</h4>
           <p>I am still working on transfering my last jquery plugin back to digital form.  Oddly enough, I only was able to find a typed copy 
@@ -108,16 +114,6 @@
               will begin working on an example page that utilizes the plugin    .</p>
         </div>
 
-        <div class="span6">
-          <h4>Subheading</h4>
-          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-        </div>
       </div>
 
       <hr>

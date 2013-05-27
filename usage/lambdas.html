@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Usage Examples for Javascript Lambda Expressions</title>
+        <meta name="author" content="John Gilliland <johngilliland@outlook.com>" />
+        <meta name="description" content="Javascript work index page." />
+        <meta name="viewport" content="width=device-width" />
+        <!-- Bootstrap -->
+        <link href="../resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+        <style type="text/css">
+            body {
+                padding-top: 20px;
+                padding-bottom: 40px;
+              }
+            
+              /* Custom container */
+              .container-narrow {
+                margin: 0 auto;
+                max-width: 700px;
+              }
+              .container-narrow > hr {
+                margin: 30px 0;
+              }
+        </style>
+        <link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="../styles/bootstrap.ex.css" rel="stylesheet" media="screen">
+
+        <style type="text/css" media="screen">
+            li.disappearing {
+                background-color:  #f7f7f7;
+                margin: 7px;
+                padding:  4px;
+            }
+            li.disappearing:hover {
+                background-color:  rgba(182, 255, 0, 0.79);
+                border:  1px solid #808080; 
+                cursor: pointer;
+            }
+            .indented { margin-left:  14px;}
+        </style>
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+                    <!--[if lt IE 9]>
+                                    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+                                <![endif]-->
+    </head>
+    <body>
+
+        <!--  Header  -->
+        <div class="container-narrow">
+            <div class="masthead">                
+                <ul class="nav nav-pills pull-right">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <h3 class="muted">Javascript Expirements</h3>
+            </div>
+
+            <hr>
+
+            <!--  Main Content (fluid, narrow layout)  -->
+            <h2>Javascript Lambdas - Usage Examples</h2>
+
+            <p>When I first thought of trying to pull this off, the main usage in my head was
+            adding event handlers in jquery.  For example, a click handler.  I pull an html
+            element and want to assign a click handler so I need to pass an anonymous function
+            to the <pre>$(elem).click(function)</pre>.  So I think to myself, "Wouldn't it be
+            nice to be able to use a lambda expression like I can in C#?"  The answer is that
+            yes it would!</p>
+
+            <h3>Scenario: </h3>
+
+            <p>The following list of items will disappear when clicked on.  Each item has been
+            given a particular class (.disappearing) and will disappear when clicked because of
+            an event handler that has been assigned to the click event.  Alternately, when you
+            click the reset button below the items, the items that are hidden will be shown.
+            This happens to be assigned also using the click event handler, only to the button
+            instead of the paragraphs.</p>
+
+            <div class="indented">
+                <h5>Click on a paragraph below to remove it:</h5>
+                <ul style="list-style: none;">
+                <li class="disappearing">This is an example element (paragraph) in the html page that I can use jquery
+                to find and assign a click event handler to it.  Once assigned, when you click on
+                paragraph it will disappear.</li>
+                <li class="disappearing">Here is another paragraph element that should disappear when clicked on.  That
+                is assuming successful assignment of the event handler using the jquery click method.</li>
+                <li class="disappearing">And finally here is a third paragraph so that you can try the whole thing three
+                times.</li>
+                    </ul>
+                <a class="btn btn-large indented" style="margin-left: 30px" id="reset-button">Reset</a>
+                <p></p>
+            </div>
+
+            <p>The functionality for this example is accomplished with two click event handlers, one for the paragraphs
+            themselves, and a second for the Reset button.  Here is the normal code:</p>
+                <pre>
+
+            $(".disappearing").click(function ()
+            {
+                $(this).slideUp();
+            });
+            
+            $("#reset-button").click(function ()
+            {
+                $(".disappearing:hidden").each(function ()
+                {
+                    $(this).slideDown();
+                });
+            });
+                </pre>
+
+            <h3>Enter Lambda Expressions</h3>
+            <p>The anonymous functions used as parameters to jquery's click method could be replaced with the following
+            lambda expression, wrapped in the lambda helper function.  The helper function is required to handle parsing 
+            the lambda expression into a normal javascript code.</p>
+            <p>Using the lambda expression helper function you can replace the click handlers with this code:
+                <pre>
+
+        $(".disappearing").click( _l("() => $(this).slideUp()") );
+
+        $("#reset-button").click(
+            _l("() => $('.disappearing:hidden').each(function(){ $(this).slideDown()});")
+        );
+
+</pre>
+                The call to the _l function accepts a lambda expression as a string, similar to a lambda expression in
+                C#.  There are no parameters in this expression so the empty parens signal that, and then the call to 
+                the jquery slideUp function.  Fairly straightforward.  Though the second click handler is not as simple.
+            </p>
+            <p>To replace the second click handler, for the reset button, the expression is a bit longer as it contains
+            an each() loop which itself takes an anonymous function as a parameter.  I have not yet setup the functionality
+            for nesting in the lambdas helper function, but I am working on that next.  So, for the time being, you can 
+            simply pass in the second function as part of the lambda expression for the click.</p>
+
+            <p>In fact, if you view the source of this page, you will see the usage just as it is show here.  Next is the
+            issue of nesting expressions.  Please keep in mind that this is just a first attempt and this functionality.
+            Ideally it would be part of a preprocessor and function the way that coffeescript, typescript, or less work, so
+            that you did not need the _l helper function or the lambda to be a string argument.  Baby steps!</p>
+
+        </div>
+
+
+
+        <!--  javascript files  -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="../resources/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../scripts/extensions.js"></script>
+        <script type="text/javascript" src="../scripts/lambdas.js"></script>
+
+
+        <script type="text/javascript">
+
+            $(".disappearing").click(_l("() => $(this).slideUp()"));
+            
+            $("#reset-button").click(_l("() => $('.disappearing:hidden').each(function(){ $(this).slideDown()});"));
+             
+        </script>
+
+    </body>
+</html>

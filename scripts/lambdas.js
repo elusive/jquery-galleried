@@ -74,7 +74,7 @@ window.Lambdas = Lambdas;
             }
 
             // re-add the parenthesis to arguments
-            args = '('.concat(args).concat(')');
+            //args = '('.concat(args).concat(')');
 
             return args;
         },
@@ -154,19 +154,12 @@ window.Lambdas = Lambdas;
             }
 
             var arguments = parseArgumentsString(lambda);
+            console.log("arguments: " + arguments);
             
             var expression = parseExpressionString(lambda)
-                
-            var functionString = Constants.FUNCTION_DECLARATION1
-                .concat(arguments)
-                .concat(Constants.FUNCTION_DECLARATION2)
-                .concat(expression)
-                .concat(Constants.FUNCTION_DECLARATION3);
-                      
-            // build function object from resulting string
-            eval('var x = ' + functionString);
+            console.log("expression: " + expression);
             
-            return x;
+            return new Function(arguments.split(','), expression);                         
         }
 
         // assignments

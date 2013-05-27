@@ -13,81 +13,108 @@
 	<!--  INLINE TESTS  -->
 	<script type="text/javascript">
 
-		/*
-		 *	Test Setups
-		 */
-		var TestInputValues = {
-			LambdaNoParen : "x,y => return x + y",
-			LambdaWithParen : "(x,y) => return x + y",
-			LambdaWithoutSemicolon : "(x,y) => return x + y;"
-		};
+     /*
+     *  Test Setups
+     */
+     var TestInputValues = {
+         LambdaNoParen: "x,y => return x + y",
+         LambdaWithParen: "(x,y) => return x + y",
+         LambdaWithoutSemicolon: "(x,y) => return x + y;",
+         LambdaWithoutParameters: "() => return 2 + 3"
+     };
 
-		var ExpectedResultValues = {
-			ArgumentString : "(x,y)",
-			ExpressionString : "return x + y;",
-			FunctionString : "function(x,y) { return x + y; }"
-		};
+     var ExpectedResultValues = {
+         ArgumentString: "x,y",
+         ExpressionString: "return x + y;",
+         FunctionString: "function(x,y) { return x + y; }",
+         NoParameterResult: "5"
+     };
 
-		/** Test number 1 */
-		test("Positive Test", 
-			function () {
-                ok(true, "Always passing.");
-			});
+     /** Test number 1 */
+     test("Positive Test",
+         function ()
+         {
+             ok(true, "Always passing.");
+         });
 
-		/** Test number 2 */
-		test("Correctly parse the argument string from [{0}].".format(TestInputValues.LambdaNoParen),
-			function() {
-				var result = Lambdas.ParseArguments(TestInputValues.LambdaNoParen);
-				equal(result, ExpectedResultValues.ArgumentString,
-					"Should parse correct argument string.");
-			});
+     /** Test number 2 */
+     test("Correctly parse the argument string from [{0}].".format(TestInputValues.LambdaNoParen),
+         function ()
+         {
+             var result = Lambdas.ParseArguments(TestInputValues.LambdaNoParen);
+             equal(result, ExpectedResultValues.ArgumentString,
+                 "Should parse correct argument string.");
+         });
 
-		/** Test number 3 */
-		test("Correctly parse the argument string from [{0}].".format(TestInputValues.LambdaWithParen),
-			function() {
-				var result = Lambdas.ParseArguments(TestInputValues.LambdaWithParen);
-				equal(result, ExpectedResultValues.ArgumentString, 
-					"Should parse correct argument string.")
-			});
+     /** Test number 3 */
+     test("Correctly parse the argument string from [{0}].".format(TestInputValues.LambdaWithParen),
+         function ()
+         {
+             var result = Lambdas.ParseArguments(TestInputValues.LambdaWithParen);
+             equal(result, ExpectedResultValues.ArgumentString,
+                 "Should parse correct argument string.")
+         });
 
-		/** Test number 4 */
-		test("Correctly parse the argument string from [{0}].".format(TestInputValues.LambdaWithoutSemicolon),
-			function() {
-				var result = Lambdas.ParseArguments(TestInputValues.LambdaNoParen);
-				equal(result, ExpectedResultValues.ArgumentString, 
-					"Should parse correct argument string.")
-			});
+     /** Test number 4 */
+     test("Correctly parse the argument string from [{0}].".format(TestInputValues.LambdaWithoutSemicolon),
+         function ()
+         {
+             var result = Lambdas.ParseArguments(TestInputValues.LambdaNoParen);
+             equal(result, ExpectedResultValues.ArgumentString,
+                 "Should parse correct argument string.")
+         });
 
-        //** Test number 5 */
-		test("Correctly parse the expression string from [{0}].".format(TestInputValues.LambdaNoParen),
-			function() {
-                var result = Lambdas.ParseExpression(TestInputValues.LambdaNoParen);
-                equal(result, ExpectedResultValues.ExpressionString, 
-                	"Should parse correct expression string.");
-			});
+     //** Test number 5 */
+     test("Correctly parse the expression string from [{0}].".format(TestInputValues.LambdaNoParen),
+         function ()
+         {
+             var result = Lambdas.ParseExpression(TestInputValues.LambdaNoParen);
+             equal(result, ExpectedResultValues.ExpressionString,
+                 "Should parse correct expression string.");
+         });
 
-        //** Test number 6 */
-		test("Correctly parse the expression string from [{0}].".format(TestInputValues.LambdaWithParen),
-			function() {
-                var result = Lambdas.ParseExpression(TestInputValues.LambdaWithParen);
-                equal(result, ExpectedResultValues.ExpressionString, 
-                	"Should parse correct expression string.");
-			});
+     //** Test number 6 */
+     test("Correctly parse the expression string from [{0}].".format(TestInputValues.LambdaWithParen),
+         function ()
+         {
+             var result = Lambdas.ParseExpression(TestInputValues.LambdaWithParen);
+             equal(result, ExpectedResultValues.ExpressionString,
+                 "Should parse correct expression string.");
+         });
 
-        //** Test number 7 */
-		test("Correctly parse the expression string from [{0}].".format(TestInputValues.LambdaWithoutSemicolon),
-			function() {
-                var result = Lambdas.ParseExpression(TestInputValues.LambdaWithoutSemicolon);
-                equal(result, ExpectedResultValues.ExpressionString, 
-                	"Should parse correct expression string.");
-			});
+     //** Test number 7 */
+     test("Correctly parse the expression string from [{0}].".format(TestInputValues.LambdaWithoutSemicolon),
+         function ()
+         {
+             var result = Lambdas.ParseExpression(TestInputValues.LambdaWithoutSemicolon);
+             equal(result, ExpectedResultValues.ExpressionString,
+                 "Should parse correct expression string.");
+         });
 
-		test("Correctly produce the function string from [{0}].".format(TestInputValues.LambdaNoParen),
-			function() {
-				var result = _l(TestInputValues.LambdaNoParen); 
-				equal(result(2, 25), 27,
-					"Should produce correct function from lambda.");
-			});
+     //** Test number 8 */
+     test("Correctly produce the function string from [{0}].".format(TestInputValues.LambdaNoParen),
+         function ()
+         {
+             var result = _l(TestInputValues.LambdaNoParen);
+             equal(result(2, 25), 27,
+                 "Should produce correct function from lambda.");
+         });
+
+     //** Test number 9 */
+     test("Correctly produce the function string from [{0}].".format(TestInputValues.LambdaWithoutParameters),
+         function ()
+         {
+             var result = _l(TestInputValues.LambdaWithoutParameters);
+             equal(result(), 5, "Should handle expression without parameters");
+         });
+
+     //** Test number 10 */
+     test("Lambda fx should return a valid function that can be executed.",
+        function ()
+        {
+            var fx = Lambdas._l("() => return 2 + 2");
+            equal(fx(), 4, "Should be able to execute result of lambda parse.");
+        });
 	</script>
 </body>
 </html>
